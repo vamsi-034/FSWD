@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profile - CareerConnect</title>
+<link rel="icon" type="image/x-icon" href="favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<style>
+:root {
+    --primary: #00d4ff;
+    --secondary: #7000ff;
+    --bg-dark: #05070a;
+    --card: rgba(17, 25, 40, 0.5);
+    --border: rgba(255, 255, 255, 0.1);
+    --text: #eef2ff;
+    --dim: #a0aec0;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Inter',sans-serif;
+}
+
+body {
+    color: var(--text);
+    display: flex;
+    min-height: 100vh;
+    background-color: var(--bg-dark);
+    background-image: 
+        radial-gradient(at 0% 0%, rgba(112, 0, 255, 0.25), transparent 50%), 
+        radial-gradient(at 100% 0%, rgba(0, 212, 255, 0.15), transparent 50%),
+        radial-gradient(at 50% 100%, rgba(112, 0, 255, 0.1), transparent 50%);
+}
+
+/* SIDEBAR */
+.sidebar {
+    width: 300px;
+    height: 100vh;
+    position: fixed;
+    background: rgba(10, 12, 16, 0.4);
+    backdrop-filter: blur(20px);
+    border-right: 1px solid var(--border);
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.sidebar img{
+    width:200px;
+    height:200px;
+    border-radius:50%;
+    border:4px solid var(--primary);
+    margin-bottom:20px;
+}
+
+.sidebar h2{
+    font-size:2rem;
+    margin-bottom:30px;
+}
+
+.sidebar a{
+    display:block;
+    margin:25px 0;
+    font-size:1.5rem;
+    color:var(--dim);
+    text-decoration:none;
+}
+
+.sidebar a:hover{
+    color:var(--primary);
+}
+
+/* MAIN */
+.main{
+    margin-left:320px;
+    width:100%;
+    padding:30px;
+}
+
+/* NAVBAR */
+.top-nav{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    background:var(--card);
+    padding:15px 25px;
+    border-radius:15px;
+    border:1px solid var(--border);
+    margin-bottom:30px;
+}
+
+.nav-right a{
+    margin-left:20px;
+    text-decoration:none;
+    color:var(--dim);
+}
+
+.nav-right a:hover{
+    color:var(--primary);
+}
+
+/* CARD */
+.card {
+    position: relative;
+    background: var(--card);
+    backdrop-filter: blur(16px);
+    padding: 30px;
+    border-radius: 20px;
+    margin-bottom: 25px;
+    border: 1px solid var(--border);
+}
+
+/* HEADINGS */
+h2{
+    color:var(--primary);
+    margin-bottom:15px;
+}
+
+/* TEXT */
+p{
+    color:var(--dim);
+    font-size:1.1rem;
+}
+
+/* EDIT BUTTON */
+.edit-btn {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    background: linear-gradient(90deg, #6a11cb, #2575fc);
+    color: white;
+    border: none;
+    padding: 6px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+/* GRID */
+.grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+}
+
+/* CERT */
+.cert img{
+    width:100%;
+    max-height:220px;
+    border-radius:10px;
+    margin-top:10px;
+}
+
+/* MODAL */
+.modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.7);
+    justify-content:center;
+    align-items:center;
+}
+
+.modal-content{
+    background:var(--card);
+    padding:25px;
+    border-radius:12px;
+    width:350px;
+}
+
+input, textarea{
+    width:100%;
+    padding:10px;
+    margin:10px 0;
+    border:none;
+    border-radius:6px;
+}
+
+button{
+    padding:10px;
+    width:10%;
+    background:var(--primary);
+    border:none;
+    color:white;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+.edit-btnp{
+    position: absolute;
+    left:20rem;
+    top: 20px;
+    background: linear-gradient(90deg, #6a11cb, #2575fc);
+    color: white;
+    border: none;
+    padding: 6px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+    <img th:src="@{/images/me.jpg}">
+<h2 th:text="${profile.fname}"></h2>
+    <a href="#about">About</a>
+    <a href="#education">Education</a>
+    <a href="#cert">Certificates</a>
+    <a href="#contact">Contact</a>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+    <!-- NAVBAR -->
+    <div class="top-nav">
+        <h2>Profile</h2>
+        <div class="nav-right">
+            <a href="/home">Home</a>
+            <a href="/logout">Logout</a>
+        </div>
+    </div>
+
+    <!-- ABOUT -->
+    <div class="card" id="about">
+        <h2>About</h2>
+        <button class="edit-btn" onclick="openModal('aboutModal')">Edit</button>
+        <p th:text="${profile.about}">About text</p>
+    </div>
+
+    <!-- DETAILS -->
+    <div class="card grid">
+        <div>
+            <h2>Personal</h2>
+            <button class="edit-btnp" onclick="openModal('personalModal')">Edit</button>
+            <p th:text="${profile.personal}"></p>
+        </div>
+
+        <div id="contact">
+            <h2>Contact</h2>
+            <button class="edit-btn" onclick="openModal('contactModal')">Edit</button>
+            <p>
+                📞 <span th:text="${profile.phone}"></span><br>
+                📧 <span th:text="${profile.email}"></span>
+            </p>
+        </div>
+    </div>
+
+    <!-- EDUCATION -->
+    <div class="card" id="education">
+        <h2>Education</h2>
+        <button class="edit-btn" onclick="openModal('eduModal')">Edit</button>
+        <p th:text="${profile.education}"></p>
+    </div>
+
+    <!-- CERTIFICATIONS -->
+    <div class="card" id="cert">
+        <h2>Certifications</h2>
+        <button class="edit-btn" onclick="openModal('certModal')">Add</button>
+
+        <div class="cert">
+            <p th:text="${profile.certificatename}"></p> 
+            <img th:src="${profile.certificateimage}">
+        </div>
+    </div>
+
+</div>
+
+<!-- MODALS -->
+<div class="modal" id="aboutModal">
+    <div class="modal-content">
+        <form action="/updateAbout" method="post">
+            <textarea name="about"></textarea>
+            <button>Save</button>
+        </form>
+    </div>
+</div>
+
+<div class="modal" id="personalModal">
+    <div class="modal-content">
+        <form action="/updatePersonal" method="post">
+        <label>Personal</label>
+            <input type="text" name="details">
+            <button>Save</button>
+        </form>
+    </div>
+</div>
+
+<div class="modal" id="contactModal">
+    <div class="modal-content">
+        <form action="/updateContact" method="post">
+        	<lable>Phone Number</lable>
+            <input type="text" name="phone">
+            <button>Save</button>
+        </form>
+    </div>
+</div>
+
+<div class="modal" id="eduModal">
+    <div class="modal-content">
+        <form action="/updateEducation" method="post">
+        	<label>Education</label>
+            <input type="text" name="education">
+            <button>Save</button>
+        </form>
+    </div>
+</div>
+
+<div class="modal" id="certModal">
+    <div class="modal-content">
+        <form action="/addCertificate" method="post" enctype="multipart/form-data">
+        	<label>Course Name</label>
+            <input type="text" name="name">
+            <br>
+            <label>Upload Certificate</label>
+            <input type="file" name="image">
+            <button>Add</button>
+        </form>
+    </div>
+</div>
+
+<script>
+function openModal(id){
+    document.getElementById(id).style.display="flex";
+}
+
+window.onclick = function(e){
+    document.querySelectorAll('.modal').forEach(m=>{
+        if(e.target === m){
+            m.style.display='none';
+        }
+    });
+}
+</script>
+
+</body>
+</html>
